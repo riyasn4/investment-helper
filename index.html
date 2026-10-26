@@ -503,14 +503,14 @@ q.type="text";q.placeholder="Fund name words";q.setAttribute("aria-label","Fund 
 sb.addEventListener("click",async function(){rs.textContent="";if(!q.value.trim())return;rs.textContent="Searching...";
 try{var a=await(await fetch("https://api.mfapi.in/mf/search?q="+encodeURIComponent(q.value.trim()))).json();rs.textContent="";
 if(!a.length){rs.textContent="No funds found. Try fewer words.";return}
-a.slice(0,8).forEach(function(f){var o=mk("button","s",f.schemeName);o.type="button";o.style.cssText="display:block;width:100%;text-align:left;margin:6px 0";o.addEventListener("click",function(){h.c=String(f.schemeCode);saveH();draw()});rs.appendChild(o)})}
+a.slice(0,8).forEach(function(f){var o=mk("button","s",f.schemeName);o.type="button";o.style.cssText="display:block;width:100%;text-align:left;margin:6px 0";o.addEventListener("click",function(){h.c=String(f.schemeCode);saveH();draw()});rs.appendChild(o);fetch("https://api.mfapi.in/mf/"+f.schemeCode+"/latest").then(function(r){return r.json()}).then(function(j){var x=j&&j.data&&j.data[0],t=x&&String(x.date).match(/^(\d{2})-(\d{2})-(\d{4})$/);if(!t)return;var dt=t[3]+"-"+t[2]+"-"+t[1],old=ago(dt)>10;o.textContent=f.schemeName+" | latest price "+dt+(old?" (OLD, do not use)":"");o.disabled=old;if(old)o.style.opacity=".55"}).catch(function(){})})}
 catch(e){rs.textContent="Could not search now. Check your internet and try again."}});
 b.appendChild(l);b.appendChild(q);b.appendChild(sb);b.appendChild(rs);return b}
 async function autoPrices(m){var xs=H.filter(function(h){return h.c&&h.u}),ok=0,bad=0;
 if(m&&!xs.length){$("upmsg").textContent="No fund has both a fund code and a linked price yet. Add the code, then link the price once.";return}
 await Promise.all(xs.map(async function(h){try{var j=await(await fetch("https://api.mfapi.in/mf/"+encodeURIComponent(h.c)+"/latest")).json(),x=j&&j.data&&j.data[0],t=x&&String(x.date).match(/^(\d{2})-(\d{2})-(\d{4})$/),n=x&&Number(x.nav);
-if(!t||!(n>0))throw 0;var d=t[3]+"-"+t[2]+"-"+t[1];if(h.d!==d||h.nav!==n){h.v=Math.round(h.u*n*100)/100;h.nav=n;h.d=d}ok++}catch(e){bad++}}));
-if(xs.length){saveH();rList();rSum();rMix();if(CV==="T")rT();$("upmsg").textContent=ok+" price(s) updated"+(bad?", "+bad+" could not be reached.":".")}}
+if(!t||!(n>0))throw 0;var d=t[3]+"-"+t[2]+"-"+t[1];if(ago(d)>10||(h.d&&d<h.d))throw 0;if(h.d!==d||h.nav!==n){h.v=Math.round(h.u*n*100)/100;h.nav=n;h.d=d}ok++}catch(e){bad++}}));
+if(xs.length){saveH();rList();rSum();rMix();if(CV==="T")rT();$("upmsg").textContent=ok+" price(s) updated"+(bad?", "+bad+" had no fresh price. Check the fund code.":".")}}
 $("upall").addEventListener("click",function(){$("upmsg").textContent="Updating...";autoPrices(1)});
 setS(DC?"Tap Sync now to connect your Google Drive copy.":"Google Drive is not set up yet (see the README). Your data is saved on this device, so use the backup button too.");
 autoPrices();

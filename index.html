@@ -6,9 +6,9 @@
 <title>Investment helper</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b5d5e"><link rel="apple-touch-icon" href="icon-192.png"><script src="drive-config.js"></script><script src="https://accounts.google.com/gsi/client" async defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f2f6f7;--card:#fff;--tx:#14232b;--mut:#4d6169;--bd:#cfdadd;--ac:#0b5d5e;--onac:#fff;--er:#a32d2d;--d:#5b7a86;--i:#3b4b9b;--g:#c28f1e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a1f;--card:#17262d;--tx:#e8f0f2;--mut:#9fb3ba;--bd:#2b3f47;--ac:#5fc4c0;--onac:#0f1a1f;--er:#f09595;--d:#8fb0bc;--i:#9aa8ee;--g:#e3b04a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0f1a1f;--card:#17262d;--tx:#e8f0f2;--mut:#9fb3ba;--bd:#2b3f47;--ac:#5fc4c0;--onac:#0f1a1f;--er:#f09595;--d:#8fb0bc;--i:#9aa8ee;--g:#e3b04a;color-scheme:dark}
+:root{--bg:#f2f6f7;--card:#fff;--tx:#14232b;--mut:#4d6169;--bd:#cfdadd;--ac:#0b5d5e;--onac:#fff;--er:#a32d2d;--d:#5b7a86;--i:#3b4b9b;--g:#c28f1e;--s:#a64d79;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a1f;--card:#17262d;--tx:#e8f0f2;--mut:#9fb3ba;--bd:#2b3f47;--ac:#5fc4c0;--onac:#0f1a1f;--er:#f09595;--d:#8fb0bc;--i:#9aa8ee;--g:#e3b04a;--s:#e07fb0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a1f;--card:#17262d;--tx:#e8f0f2;--mut:#9fb3ba;--bd:#2b3f47;--ac:#5fc4c0;--onac:#0f1a1f;--er:#f09595;--d:#8fb0bc;--i:#9aa8ee;--g:#e3b04a;--s:#e07fb0;color-scheme:dark}
 *,*:before,*:after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.55 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .w{max-width:560px;margin:0 auto;padding:24px 16px 56px}
@@ -123,7 +123,7 @@ textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 <section><h2>Your holdings</h2><button type="button" id="upall" style="flex:none;width:100%;margin:8px 0">Update all prices now</button><p class="hint" id="upmsg"></p><p class="hint">Change a number any time. It saves by itself. Use Link price to update the worth from the fund’s NAV. Give a fund a fund code and link its price once, and it updates by itself after that.</p><div class="card" id="list"></div></section>
 <section><h2>Add a holding</h2><div class="card">
 <label for="hn">Name</label><input id="hn" type="text" maxlength="60" placeholder="Example: Nifty 50 index fund">
-<label for="ht">Type</label><select id="ht"><option value="debt">Debt or liquid fund</option><option value="index">Nifty 50 index fund</option><option value="gold">Gold</option><option value="other">Other fund or stock</option></select>
+<label for="ht">Type</label><select id="ht"><option value="debt">Debt or liquid fund</option><option value="index">Nifty 50 index fund</option><option value="gold">Gold</option><option value="stock">Stock</option><option value="other">Other fund</option></select>
 <label for="hm">Money is for</label><select id="hm"><option value="l">Long term (1+ years)</option><option value="s">Short term (about 6 months)</option></select>
 <div class="two"><div><label for="hi">Money invested (₹)</label><input id="hi" type="number" inputmode="numeric" min="1"></div><div><label for="hv">Worth now (₹)</label><input id="hv" type="number" inputmode="numeric" min="0"></div></div>
 <button class="p" id="hadd" type="button">Add holding</button>
@@ -163,13 +163,13 @@ textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 
 <section>
 <h2>Where the money goes</h2>
-<p class="hint">Pick a share for each part. The three shares must add up to 100%.</p>
+<p class="hint">Pick a share for each part. The shares must add up to 100%. Use 0 for stocks if you want none.</p>
 <div class="card">
-<div class="bar" aria-hidden="true"><i id="bd" style="background:var(--d)"></i><i id="bi" style="background:var(--i)"></i><i id="bg" style="background:var(--g)"></i></div>
+<div class="bar" aria-hidden="true"><i id="bd" style="background:var(--d)"></i><i id="bi" style="background:var(--i)"></i><i id="bg" style="background:var(--g)"></i><i id="bs" style="background:var(--s)"></i></div>
 <div class="r f"><span class="sw" style="background:var(--d)"></span><div class="nm"><b>Debt or liquid fund</b><span>Steady, for short-term money</span></div><input id="debt" type="number" inputmode="numeric" min="0" max="100" aria-label="Debt or liquid fund percent"><span class="amt" id="ad"></span></div>
 <div class="r"><span class="sw" style="background:var(--i)"></span><div class="nm"><b>Nifty 50 index fund</b><span>Grows slowly over years</span></div><input id="index" type="number" inputmode="numeric" min="0" max="100" aria-label="Nifty 50 index fund percent"><span class="amt" id="ai"></span></div>
 <div class="r"><span class="sw" style="background:var(--g)"></span><div class="nm"><b>Gold</b><span>Helps when shares fall</span></div><input id="gold" type="number" inputmode="numeric" min="0" max="100" aria-label="Gold percent"><span class="amt" id="ag"></span></div>
-<div class="tot"><span>Total</span><span id="tot"></span></div>
+<div class="r"><span class="sw" style="background:var(--s)"></span><div class="nm"><b>Stocks</b><span>Small slice, checked weekly</span></div><input id="stock" type="number" inputmode="numeric" min="0" max="100" aria-label="Stocks percent"><span class="amt" id="as"></span></div><div class="tot"><span>Total</span><span id="tot"></span></div>
 </div>
 </section>
 
@@ -179,7 +179,7 @@ textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 <div class="card two">
 <div><label for="loss">Warn me at this fall from the peak (%)</label><input id="loss" type="number" inputmode="decimal" min="1" max="20" step="0.5"></div>
 <div><label for="drift">Rebalance when a part is off by (%)</label><input id="drift" type="number" inputmode="decimal" min="1" max="20" step="0.5"></div>
-<div><label for="gain">Take the gain on short-term money at (%)</label><input id="gain" type="number" inputmode="decimal" min="1" max="50" step="0.5"></div>
+<div><label for="stopl">Sell a stock if it falls this much (%)</label><input id="stopl" type="number" inputmode="decimal" min="1" max="50" step="0.5"></div><div><label for="sgain">Take the gain on a stock at (%)</label><input id="sgain" type="number" inputmode="decimal" min="1" max="100" step="0.5"></div><div><label for="scap">Biggest share for one stock (% of all money)</label><input id="scap" type="number" inputmode="decimal" min="0.5" max="50" step="0.5"></div><div><label for="gain">Take the gain on short-term money at (%)</label><input id="gain" type="number" inputmode="decimal" min="1" max="50" step="0.5"></div>
 </div>
 </section>
 
@@ -208,31 +208,31 @@ textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 </div>
 </main>
 <script>
-var D={money:2000,debt:40,index:45,gold:15,loss:5,drift:5,gain:6,short:6,long:1};
+var D={money:2000,debt:40,index:45,gold:15,stock:0,loss:5,drift:5,gain:6,stopl:8,sgain:15,scap:2,short:6,long:1};
 var K=Object.keys(D),KEY="inv_settings_v1";
 function $(i){return document.getElementById(i)}
 function load(){try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s),r={};K.forEach(function(k){r[k]=(typeof o[k]==="number")?o[k]:D[k]});return r}}catch(e){}return JSON.parse(JSON.stringify(D))}
 function inr(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
 function num(id){var v=$(id).value;return v===""?NaN:Number(v)}
 function upd(){
-var a=num("debt")||0,b=num("index")||0,c=num("gold")||0,t=a+b+c,m=num("money")||0,sc=Math.max(t,100);
-$("bd").style.width=(a/sc*100)+"%";$("bi").style.width=(b/sc*100)+"%";$("bg").style.width=(c/sc*100)+"%";
-var ad=Math.round(m*a/100),ai=Math.round(m*b/100),ag=Math.round(m*c/100);
-if(t===100){ag=Math.round(m)-ad-ai}
-$("ad").textContent=inr(ad);$("ai").textContent=inr(ai);$("ag").textContent=inr(ag);
+var a=num("debt")||0,b=num("index")||0,c=num("gold")||0,e=num("stock")||0,t=a+b+c+e,m=num("money")||0,sc=Math.max(t,100);
+$("bd").style.width=(a/sc*100)+"%";$("bi").style.width=(b/sc*100)+"%";$("bg").style.width=(c/sc*100)+"%";$("bs").style.width=(e/sc*100)+"%";
+var ad=Math.round(m*a/100),ai=Math.round(m*b/100),ag=Math.round(m*c/100),ae=Math.round(m*e/100);
+if(t===100){ae=Math.round(m)-ad-ai-ag}
+$("ad").textContent=inr(ad);$("ai").textContent=inr(ai);$("ag").textContent=inr(ag);$("as").textContent=inr(ae);
 $("tot").textContent=t+"% of "+inr(m);
 }
 function fill(v){K.forEach(function(k){$(k).value=v[k]});upd()}
 function check(){
 var m=num("money");if(!(m>=1)||m!==Math.floor(m))return "Enter your monthly amount as a whole number of rupees, like 2000.";
-var p=["debt","index","gold"];
+var p=["debt","index","gold","stock"];
 for(var i=0;i<3;i++){var x=num(p[i]);if(isNaN(x)||x<0||x>100)return "Each share must be a number from 0 to 100.";}
-var t=num("debt")+num("index")+num("gold");
+var t=num("debt")+num("index")+num("gold")+num("stock");
 if(t!==100)return "Your shares add up to "+t+"%. Change them so they add up to exactly 100%.";
 var l=num("loss"),d=num("drift");
 if(!(l>=1&&l<=20))return "Enter a fall limit between 1 and 20 percent.";
 if(!(d>=1&&d<=20))return "Enter a rebalance limit between 1 and 20 percent.";
-var ga=num("gain");if(!(ga>=1&&ga<=50))return "Enter a gain target between 1 and 50 percent.";
+var ga=num("gain");if(!(ga>=1&&ga<=50))return "Enter a gain target between 1 and 50 percent.";var q1=num("stopl"),q2=num("sgain"),q3=num("scap");if(!(q1>=1&&q1<=50))return "Enter a stock fall limit between 1 and 50 percent.";if(!(q2>=1&&q2<=100))return "Enter a stock gain target between 1 and 100 percent.";if(!(q3>=0.5&&q3<=50))return "Enter a one-stock limit between 0.5 and 50 percent.";
 var s=num("short"),g=num("long");
 if(!(s>=1&&s<=36)||s!==Math.floor(s))return "Short term must be a whole number of months, from 1 to 36.";
 if(!(g>=1&&g<=30)||g!==Math.floor(g))return "Long term must be a whole number of years, from 1 to 30.";
@@ -250,7 +250,7 @@ catch(x){$("ok").textContent="Could not save here. Your settings will last only 
 $("reset").addEventListener("click",function(){fill(D);$("err").textContent="";$("ok").textContent="Back to the starting values. Press Save settings to keep them."});
 fill(load());
 var HK="inv_holdings_v1",H=[];
-var TN={debt:"Debt or liquid fund",index:"Nifty 50 index fund",gold:"Gold",other:"Other fund or stock"};
+var TN={debt:"Debt or liquid fund",index:"Nifty 50 index fund",gold:"Gold",stock:"Stock",other:"Other fund"};
 function loadH(){try{var s=localStorage.getItem(HK);if(s){var a=JSON.parse(s);if(Array.isArray(a))return a.filter(function(x){return x&&typeof x.n==="string"&&TN[x.t]&&x.i>0&&x.v>=0})}}catch(e){}return []}
 function saveH(){try{localStorage.setItem(HK,JSON.stringify(H));touch();return true}catch(e){return false}}
 function getS(){try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s),r={};K.forEach(function(k){r[k]=typeof o[k]==="number"?o[k]:D[k]});return r}}catch(e){}return D}
@@ -260,9 +260,9 @@ function sums(){var i=0,v=0;H.forEach(function(h){i+=h.i;v+=h.v});return{i:i,v:v
 function rSum(){var s=sums(),g=$("sg");$("si").textContent=inr(s.i);$("sv").textContent=inr(s.v);g.textContent=H.length?sg(s.i,s.v):"–";g.className=s.v>=s.i?"gp":"gn"}
 function rMix(){var s=sums(),S=getS(),el=$("mix");
 if(!H.length||s.v<=0){el.innerHTML='<p class="hint" style="margin:0">Add a holding to see your mix.</p>';return}
-var by={debt:0,index:0,gold:0,other:0},h="",cols={debt:"--d",index:"--i",gold:"--g"};
+var by={debt:0,index:0,gold:0,stock:0,other:0},h="",cols={debt:"--d",index:"--i",gold:"--g",stock:"--s"};
 H.forEach(function(x){by[x.t]+=x.v});
-["debt","index","gold"].forEach(function(k){var a=by[k]/s.v*100,t=S[k],df=Math.abs(a-t),off=df>=S.drift;
+["debt","index","gold","stock"].forEach(function(k){if(k==="stock"&&!S.stock&&!by.stock)return;var a=by[k]/s.v*100,t=S[k],df=Math.abs(a-t),off=df>=S.drift;
 h+='<div class="mx"><div class="mt"><span>'+TN[k]+'</span><b>'+a.toFixed(0)+'% now, goal '+t+'%</b></div><div class="trk"><i style="width:'+Math.min(a,100)+'%;background:var('+cols[k]+')"></i><u style="left:'+t+'%"></u></div><p class="'+(off?'gn':'hint')+'">'+(off?'Off by '+df.toFixed(0)+' points, past your '+S.drift+'% limit':'Within your '+S.drift+'% limit')+'</p></div>'});
 if(by.other>0)h+='<p class="hint">'+(by.other/s.v*100).toFixed(0)+'% is in other funds or stocks, which are not part of your goal split.</p>';
 h+='<p class="hint" style="margin-top:8px">The black line marks your goal.</p>';el.innerHTML=h}
@@ -273,7 +273,7 @@ function nv(x){return "₹"+Number(x).toLocaleString("en-IN",{maximumFractionDig
 function pbox(h,g){var w=mk("div","pb");
 function draw(){w.textContent="";var n=h.u?ago(h.d):0;
 w.appendChild(mk("p",n>3?"gn":"hint",h.u?"Price linked: "+h.u.toFixed(4)+" units, last NAV "+nv(h.nav)+" on "+h.d+(n>3?". That is "+n+" days old.":"."):"Not linked yet. Enter the NAV for the same day as your Worth now. The app works out your units from it."));
-var two=mk("div","two"),a=mk("div"),b=mk("div"),ni=document.createElement("input"),di=document.createElement("input"),la=mk("label","",h.u?"New NAV (₹)":"NAV (₹)"),lb=mk("label","","NAV date"),er=mk("p","err"),bt=mk("button","s",h.u?"Update price":"Link price");
+var two=mk("div","two"),a=mk("div"),b=mk("div"),ni=document.createElement("input"),di=document.createElement("input"),la=mk("label","",(h.t==="stock"?(h.u?"New share price (₹)":"Share price (₹)"):(h.u?"New NAV (₹)":"NAV (₹)"))),lb=mk("label","","NAV date"),er=mk("p","err"),bt=mk("button","s",h.u?"Update price":"Link price");
 ni.id="n"+h.id;ni.type="number";ni.inputMode="decimal";ni.step="any";ni.min="0";la.htmlFor=ni.id;
 di.id="d"+h.id;di.type="date";di.value=tdy();di.max=tdy();lb.htmlFor=di.id;bt.type="button";
 a.appendChild(la);a.appendChild(ni);b.appendChild(lb);b.appendChild(di);two.appendChild(a);two.appendChild(b);
@@ -282,10 +282,10 @@ bt.addEventListener("click",function(){var x=Number(ni.value);
 if(ni.value===""||!(x>0)){er.textContent="Enter the NAV as a number more than 0.";return}
 if(!di.value||di.value>tdy()){er.textContent="Choose a NAV date that is today or earlier.";return}
 if(h.u){h.v=Math.round(h.u*x*100)/100}else{if(!(h.v>0)){er.textContent="Enter what it is worth now first. It must be more than 0.";return}h.u=h.v/x}
-h.nav=x;h.d=di.value;saveH();
+h.nav=x;h.d=di.value;saveH();if(h.t==="stock")sv("inv_swk_v1",{d:tdy()});
 var wi=document.getElementById("f"+h.id+"v");if(wi)wi.value=h.v;
 g.textContent=sg(h.i,h.v);g.className=h.v>=h.i?"gp":"gn";rSum();rMix();track();draw()});
-w.appendChild(codebox(h,draw));w.appendChild(two);w.appendChild(bt);w.appendChild(er)}
+if(h.t!=="stock")w.appendChild(codebox(h,draw));w.appendChild(two);w.appendChild(bt);w.appendChild(er)}
 PB[h.id]=draw;draw();return w}
 function termsel(h){var w=mk("div"),s=document.createElement("select"),l=mk("label","","Money is for");s.id="m"+h.id;l.htmlFor=s.id;[["l","Long term (1+ years)"],["s","Short term (about 6 months)"]].forEach(function(o){var p=mk("option","",o[1]);p.value=o[0];s.appendChild(p)});s.value=h.m==="s"?"s":"l";s.addEventListener("change",function(){h.m=s.value;saveH()});w.appendChild(l);w.appendChild(s);return w}
 var PK="inv_peak_v1",SK="inv_sip_v1";
@@ -295,15 +295,15 @@ function mon(){return tdy().slice(0,7)}
 function track(){var s=sums();if(!H.length||s.v<=0)return null;var p=ld(PK);
 if(!p||!(p.peak>0)||typeof p.inv!=="number"){p={peak:s.v,inv:s.i}}else{p.peak+=s.i-p.inv;p.inv=s.i}
 if(p.peak<s.v)p.peak=s.v;sv(PK,p);return p}
-function alloc(by,tot,M,S){var ks=["debt","index","gold"],sh={},sum=0,out={};
-ks.forEach(function(k){sh[k]=Math.max(0,(tot+M)*S[k]/100-by[k]);sum+=sh[k]});
-if(sum<=0){ks.forEach(function(k){out[k]=Math.round(M*S[k]/100)})}
-else{var f=Math.min(1,M/sum);ks.forEach(function(k){out[k]=Math.round(sh[k]*f)});if(sum<M){var r=M-sum;ks.forEach(function(k){out[k]+=Math.round(r*S[k]/100)})}}
+function alloc(by,tot,M,S){var ks=["debt","index","gold","stock"],sh={},sum=0,out={};
+ks.forEach(function(k){sh[k]=Math.max(0,(tot+M)*(S[k]||0)/100-(by[k]||0));sum+=sh[k]});
+if(sum<=0){ks.forEach(function(k){out[k]=Math.round(M*(S[k]||0)/100)})}
+else{var f=Math.min(1,M/sum);ks.forEach(function(k){out[k]=Math.round(sh[k]*f)});if(sum<M){var r=M-sum;ks.forEach(function(k){out[k]+=Math.round(r*(S[k]||0)/100)})}}
 var t=ks.reduce(function(a,k){return a+out[k]},0),d=Math.round(M)-t;
 if(d){var big=ks.reduce(function(a,b){return out[b]>out[a]?b:a});out[big]+=d}return out}
-function rules(){var S=getS(),s=sums(),M=S.money,ks=["debt","index","gold"];
+function rules(){var S=getS(),s=sums(),M=S.money,ks=["debt","index","gold","stock"];
 if(!H.length||s.v<=0)return null;
-var p=track(),by={debt:0,index:0,gold:0,other:0},R=[];H.forEach(function(x){by[x.t]+=x.v});
+var p=track(),by={debt:0,index:0,gold:0,stock:0,other:0},R=[];H.forEach(function(x){by[x.t]+=x.v});
 var done=(ld(SK)||{}).m===mon(),fall=p?(p.peak-s.v)/p.peak*100:0,dfn=!!(p&&p.def);
 if(fall>=S.loss)dfn=true;else if(fall<S.loss/2)dfn=false;
 if(p&&!!p.def!==dfn){p.def=dfn;sv(PK,p)}
@@ -311,6 +311,11 @@ if(fall>=S.loss)R.push({k:"alert",t:"Safety alert",b:"Your portfolio is "+fall.t
 else if(dfn)R.push({k:"watch",t:"Careful mode is on",b:"Your portfolio is "+fall.toFixed(1)+"% below its peak. Careful mode stays on until the fall is under "+(S.loss/2).toFixed(1)+"%.",w:"New money goes only to the debt fund, and nothing is moved back into riskier funds until then."});
 else if(fall>=S.loss*0.8)R.push({k:"watch",t:"Close to your limit",b:"Your portfolio is "+fall.toFixed(1)+"% below its peak. Your limit is "+S.loss+"%.",w:"Nothing to do yet. You will get an alert if it falls further."});
 H.forEach(function(x){var g=(x.v-x.i)/x.i*100;if(x.m==="s"&&g>=S.gain)R.push({k:"action",t:"Take the gain: "+x.n,b:"Up "+g.toFixed(1)+"% on money meant for "+S.short+" months. Your target is "+S.gain+"%.",w:"You reached the profit you wanted. Selling locks it in, and you can park the money in the debt fund.",c:1})});
+H.forEach(function(x){if(x.t!=="stock")return;var g=(x.v-x.i)/x.i*100,sh=x.v/s.v*100;
+if(g<=-S.stopl)R.push({k:"alert",t:"Stock stop-loss: "+x.n,b:x.n+" is down "+Math.abs(g).toFixed(1)+"% on what you paid. Your limit is "+S.stopl+"%.",w:"You set this limit so a small loss does not grow. Selling is your choice. Think about the fee and tax first.",c:1});
+else if(g>=S.sgain)R.push({k:"action",t:"Stock: take the gain: "+x.n,b:"Up "+g.toFixed(1)+"%. Your target is "+S.sgain+"%.",w:"You reached the profit you wanted. Selling locks it in.",c:1});
+if(sh>S.scap)R.push({k:"optional",t:"Stock too big: "+x.n,b:x.n+" is "+sh.toFixed(1)+"% of all your money. Your limit for one stock is "+S.scap+"%.",w:"One stock can swing a lot. Selling a part would bring it back inside your limit.",c:1})});
+if(H.some(function(x){return x.t==="stock"})){var wk=ld("inv_swk_v1");if(!wk||ago(wk.d)>=7)R.push({k:"action",t:"Weekly stock check",b:"Update the worth of each stock from your broker. "+(wk?"Your stock prices are "+ago(wk.d)+" days old.":"They have not been checked yet."),w:"Stocks move more than funds, so the app checks them once a week. Type each stock\u2019s worth in Holdings. The stock rules only work with fresh numbers."})}
 if(!done){var a=dfn?{debt:M,index:0,gold:0}:alloc(by,s.v,M,S),ln=ks.filter(function(k){return a[k]>0}).map(function(k){return TN[k]+" "+inr(a[k])}).join(", ");
 R.push({k:"action",t:"Add this month’s money",b:(dfn?"Careful mode is on, so put all of your "+inr(M)+" in the debt fund: ":"Split your "+inr(M)+": ")+ln+".",w:dfn?"While your money recovers, new money goes only to the steadier fund.":"New money is the gentlest way to fix your mix, because you do not have to sell anything."})}
 ks.forEach(function(k){if(k==="debt")return;var ex=by[k]-(s.v+(done?0:M))*(S[k]+S.drift)/100;if(ex>0)R.push({k:"optional",t:"Rebalance: "+TN[k],b:TN[k]+" is "+(by[k]/s.v*100).toFixed(0)+"% of your money. Your goal is "+S[k]+"%.",w:"New money alone will not fix this soon. Selling about "+inr(ex)+" and moving it to the debt fund would bring it back inside your limit. This is optional.",c:1})});
@@ -319,7 +324,11 @@ return{R:R,p:p,s:s,st:H.some(function(x){return !x.u||ago(x.d)>3})}}
 function ctxOf(o){var S=getS(),s=o.s,by={debt:0,index:0,gold:0,other:0};H.forEach(function(x){by[x.t]+=x.v});
 return "Goal split: debt "+S.debt+"%, index "+S.index+"%, gold "+S.gold+"%. Now: debt "+Math.round(by.debt/s.v*100)+"%, index "+Math.round(by.index/s.v*100)+"%, gold "+Math.round(by.gold/s.v*100)+"%, other "+Math.round(by.other/s.v*100)+"%. Total gain or loss: "+sg(s.i,s.v)+". Limits: warn at a "+S.loss+"% fall from the peak, rebalance when a part is off by "+S.drift+" points, monthly money "+inr(S.money)+"."}
 function explain(r,cx,bt,ex){var t=r.t,x;
-if(r.k==="alert")x="Your money has fallen more than your limit from its highest point. This is a warning, not an order. Moving some money into the debt fund can make your total move up and down less. Selling can have a fee and tax, so check first.";
+if(t.indexOf("Stock stop-loss")===0)x="This stock has lost more than the limit you set. A stop-loss is meant to keep one bad stock from hurting you a lot. Selling is your choice. Prices can also bounce back, and selling has a fee and tax.";
+else if(t.indexOf("Stock: take")===0)x="This stock grew to the profit you wanted. Selling now keeps that profit. If you wait, it can grow more or fall back. Check the fee and tax first.";
+else if(t.indexOf("Stock too big")===0)x="This one stock is now a big part of your money. If it falls, your whole total feels it. Selling a part spreads the risk again.";
+else if(t.indexOf("Weekly stock")===0)x="Stock prices change every day, but you only look once a week. Type the worth of each stock from your broker. Then the stock rules can check them.";
+else if(r.k==="alert")x="Your money has fallen more than your limit from its highest point. This is a warning, not an order. Moving some money into the debt fund can make your total move up and down less. Selling can have a fee and tax, so check first.";
 else if(t.indexOf("Careful")===0)x="Careful mode means your money fell past your limit and has not recovered enough yet. While it is on, new money goes only to the debt fund, which moves slowly. It turns off when the fall is less than half of your limit.";
 else if(r.k==="watch")x="You are getting close to your fall limit. Nothing is needed yet. It is only a heads-up so you are not surprised if an alert comes.";
 else if(t.indexOf("Take the gain")===0)x="This money was meant for a short time, and it has grown to the profit you wanted. Selling now keeps that profit. If you wait, it could also fall back. Check the exit fee and tax first.";
@@ -366,9 +375,9 @@ var a=pp($("xd").value),b=pp($("xi").value),c=pp($("xg").value),cost=Number($("x
 if(!a.length||!b.length||!c.length){e.textContent="Paste past prices into all three boxes. Each line needs a date and a NAV, like 2025-01-31,62.72.";return}
 if(!(cost>=0&&cost<=10)){e.textContent="Enter the cost of selling as a number from 0 to 10.";return}
 var rows=align(a,b,c);if(rows.length<60){e.textContent="Not enough days where all three funds have prices. Use at least a few months of daily prices.";return}
-var S=getS();try{var cp=[a,b,c].map(function(x){return x.map(function(y){return y.d+","+y.n}).join("\n")});localStorage.setItem("inv_test_v1",JSON.stringify(cp));$("xd").value=cp[0];$("xi").value=cp[1];$("xg").value=cp[2]}catch(e){}
+var S=Object.assign({},getS());S.index+=(S.stock||0);S.stock=0;try{var cp=[a,b,c].map(function(x){return x.map(function(y){return y.d+","+y.n}).join("\n")});localStorage.setItem("inv_test_v1",JSON.stringify(cp));$("xd").value=cp[0];$("xi").value=cp[1];$("xg").value=cp[2]}catch(e){}
 rX(sim(rows,S,cost,"rules"),sim(rows,S,cost,"plain"),S,rows)});
-var KEYS=["inv_settings_v1","inv_holdings_v1","inv_peak_v1","inv_sip_v1","inv_done_v1","inv_hist_v1"],TSK="inv_ts_v1",cdoc=null,lastSnap="",pt=null;
+var KEYS=["inv_settings_v1","inv_holdings_v1","inv_peak_v1","inv_sip_v1","inv_done_v1","inv_hist_v1","inv_swk_v1"],TSK="inv_ts_v1",cdoc=null,lastSnap="",pt=null;
 function snap(){var o={};KEYS.forEach(function(k){try{var s=localStorage.getItem(k);if(s)o[k]=JSON.parse(s)}catch(e){}});return o}
 function tsl(){try{return Number(localStorage.getItem(TSK))||0}catch(e){return 0}}
 function setS(t){var e=$("sy");if(e)e.textContent=t}
@@ -461,7 +470,7 @@ applyAdd(v);closeAdd();$("addok").textContent="Added "+inr(t)+" to your holdings
 bt.appendChild(ok);bt.appendChild(no);a.appendChild(bt);calc();a.hidden=false}
 $("addbtn").addEventListener("click",openAdd);
 function fld(lab,h,k,g){var w=mk("div"),id="f"+h.id+k,l=mk("label","",lab),n=document.createElement("input");l.htmlFor=id;n.id=id;n.type="number";n.inputMode="numeric";n.min=k==="i"?"1":"0";n.value=h[k];
-n.addEventListener("input",function(){var x=Number(n.value);if(n.value===""||!(x>=0)||(k==="i"&&x<=0))return;h[k]=x;if(k==="v"&&h.u){h.u=null;h.nav=null;h.d=null;if(PB[h.id])PB[h.id]()}saveH();g.textContent=sg(h.i,h.v);g.className=h.v>=h.i?"gp":"gn";rSum();rMix()});
+n.addEventListener("input",function(){var x=Number(n.value);if(n.value===""||!(x>=0)||(k==="i"&&x<=0))return;h[k]=x;if(k==="v"&&h.t==="stock")sv("inv_swk_v1",{d:tdy()});if(k==="v"&&h.u){h.u=null;h.nav=null;h.d=null;if(PB[h.id])PB[h.id]()}saveH();g.textContent=sg(h.i,h.v);g.className=h.v>=h.i?"gp":"gn";rSum();rMix()});
 w.appendChild(l);w.appendChild(n);return w}
 function rList(){var L=$("list");L.textContent="";
 if(!H.length){var p=mk("p","hint","No holdings yet. Add your first one below.");p.style.margin="0";L.appendChild(p);return}
